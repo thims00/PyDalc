@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 
-# Title: PyLly Dalc
-# Synopsis: A python based rally car weight distribution calculator
+# Title: PyDalc
+# Synopsis: A python based race car weight distribution calculator
 # Version: v0.01
-# Website: http://code.google.com/p/pylly-dalc/
+# Website: http://code.google.com/p/pydalc/
 # Date: 10/07/2012
 # Author: thims (Tomm Smith)
 # Contact: root.packet@gmail.com
@@ -28,12 +28,6 @@ class distCalc:
                 @FR - Front Right Weight
                 @RL - Rear Left Weight
                 @RR - Rear Right Right
-
-            
-            Return Status:
-                - 0 upon failure
-                - Upon success a tuple data structure is returned
-
         """
         
         # Misc variables to make life easier
@@ -103,6 +97,7 @@ class distCalc:
 
 
 
+# Parent GUI class
 class parentGUI:
     def __init__(self):
         # Define our glade file location
@@ -164,7 +159,7 @@ class parentGUI:
     
     #### Input Functions ####
     def sanitize_input(self, obj, data, null, pointer):
-        """ Sanitize the users input as they enter it to ensure that the inpust is a
+        """ Sanitize the users input as they enter it to ensure that the input is a
             numeric value. Only numeric values are accepted, floating points are not 
             supported.
 
@@ -205,7 +200,6 @@ class parentGUI:
             obj = self.parentGUI.get_widget(input_flds[i])
             if obj.get_text() == '':
                 self.show_missChar_dlg()
-                raise NameError('Invalid input in text fields.')
             else:
                 continue
 
@@ -235,10 +229,7 @@ class parentGUI:
 
     #### Data Output ####
     def calculate_distribution(self):
-        """ Calculate the weight distribution and return a list of the results following said structure.
-          
-            Stucture: 
-        """
+        """ Calculate the weight distribution and return a list of the results following said structure."""
         # Instantiate our calculator
         self.weightCalc = distCalc(self.input_weights['FL'], self.input_weights['FR'], 
                         self.input_weights['RL'], self.input_weights['RR'])
@@ -348,7 +339,6 @@ class parentGUI:
         space_alloc = 0
 
         # Populate our values to our template
-        #for char_pos in range(len(data_template)):
         while char_pos <= template_len:
             # An array temporarily containing the value characters of the template variable
             templ_var_vals = []
@@ -407,7 +397,8 @@ class parentGUI:
                         template_val = var_map[templ_var_vals[0]][templ_var_vals[1]]
 
                         # Store data size for space allocation only on {[a-z]0} variables
-                        # FIXME: This situations allows for an error if len(template_val) > max_digit_len
+                        # FIXME: This situations throws the diagram's fixed structure out of whack 
+                        #        if len(template_val) > max_digit_len
                         if templ_var_vals[1] == 0: 
                             space_alloc = max_digit_length - len(str(template_val))
 
@@ -476,6 +467,8 @@ class aboutDlg:
         
 
 
+
+#### void main() ####
 if __name__ == '__main__':
     parent = parentGUI()
     gtk.main()
