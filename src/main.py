@@ -14,9 +14,8 @@ import gtk
 import gtk.glade
 import pango
 
-global glade_file 
-glade_file = './src/gui/weight_distribution_calculator_.glade'
 
+glade_file = 'weight_distribution_calculator.glade'
 
 
 class distCalc:
@@ -102,16 +101,26 @@ class distCalc:
 
 
 
-class weightGUI:
+class parentGUI:
     def __init__(self):
+        # Define our glade file location
+        global glade_file
+        path = sys.argv[0]
+        path = path[0:-len(path.split('/')[-1])] 
+
+        glade_file = path + glade_file
+  
         self.parentGUI = gtk.glade.XML(glade_file, "parentWin")
 
+        self.aboutDlg = aboutDlg()
+        
         # Set the title
         gtk.Window(gtk.WINDOW_TOPLEVEL).set_title("Rally DistCalc")
         print gtk.Window(gtk.WINDOW_TOPLEVEL).get_title()
 
         # GUI Signals
         sigs = {'on_text_entry' : self.sanitize_input, 
+            'on_help_about_pressed' : self.aboutDlg.show,
             'on_calculate_pressed' : self.calculate_pressed,
             'gtk_main_quit' : gtk.main_quit}
         self.parentGUI.signal_autoconnect(sigs)
@@ -146,7 +155,11 @@ class weightGUI:
         self.missDlg.run()
         self.missDlg.destroy()
 
-        return True    
+        return True
+
+
+    
+        
 
     
     #### Input Functions ####
@@ -421,12 +434,33 @@ class weightGUI:
         # Place our template system in the textView 
         buffer = self.get_tView_buf()
         buffer.set_text(output_diagram) 
-                    
+
+
+
+
+# A child GUI class to deal with our about box
+class aboutDlg:
+    def __init__(self):
+        global glade_file
+        self.aboutDlg = gtk.glade.XML(glade_file, "aboutDlg")
+        self.dlg = self.aboutDlg.get_widget("aboutDlg")
+
+        signal_dict = {"on_aboutDlg_close_pressed" : self.hide}
+        self.aboutDlg.signal_autoconnect(signal_dict)
+
+
+    def show(self, null):
+        self.dlg.show()
+
+
+    def hide(self, null):
+        print "hide"
+        self.dlg.hide()
                     
                 
         
 
 
 if __name__ == '__main__':
-    parent = weightGUI()
+    parent = parentGUI()
     gtk.main()
