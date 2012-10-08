@@ -130,10 +130,14 @@ class parentGUI:
         """ We need to calculate and generate our data in many steps so for error
             handling we will use this function to collect all steps of the process.
         """
-        self.validate_input()
-        self.get_weight_input()
-        self.calculate_distribution()
-        self.generate_output()
+        # break and return falsehood on first failure
+        try:
+            self.validate_input()
+            self.get_weight_input()
+            self.calculate_distribution()
+            self.generate_output()
+        except:
+            return 1
 
 
     #### Dialogs ####    
@@ -200,6 +204,7 @@ class parentGUI:
             obj = self.parentGUI.get_widget(input_flds[i])
             if obj.get_text() == '':
                 self.show_missChar_dlg()
+                break # Prevent the popup from showing more than once
             else:
                 continue
 
